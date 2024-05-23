@@ -1,2 +1,3 @@
 # miro-tauri-player
-Tauri based based media-player for Raspberry-Pi device
+
+Desktop media-player for Raspberry-Pi device, made with Tauri and React JS.
