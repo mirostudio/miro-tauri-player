@@ -1,0 +1,16 @@
+:root {
+  @apply max-w-full min-h-full;
+  @apply flex items-center justify-center;
+
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 300;
+}
+
+.mainpanel {
+  @apply w-96 h-80 p-6;
+  @apply shadow-lg text-center;
+  @apply bg-gray-300 dark:bg-gray-600;
+  border-radius: 8px;
+}

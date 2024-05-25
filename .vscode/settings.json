@@ -4,8 +4,10 @@
   "editor.tabSize": 2,
   "editor.detectIndentation": true,
   "editor.formatOnPaste": false,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.formatOnSaveMode": "modifications",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
   "javascript.format.semicolons": "insert",
   "typescript.format.semicolons": "insert",
 }

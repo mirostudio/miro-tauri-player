@@ -1,10 +1,13 @@
+import "./PlayerApp.css";
+import PortalManager from "./PortalManager";
+import TauriApiTester from "./TauriApiTester";
 
 function PlayerApp() {
   return (
-    <>
-      <h1>MIRO Player</h1>
-      On device media player for Raspberry-Pi device.
-    </>
+    <div className="mainpanel">
+      <TauriApiTester/>
+      <PortalManager />
+    </div>
   );
 }
 

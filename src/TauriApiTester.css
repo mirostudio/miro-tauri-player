@@ -1,0 +1,14 @@
+.apioutput {
+  @apply m-2 p-2 min-h-40 w-80 text-sm;
+  @apply bg-black dark:bg-white;
+  @apply text-white dark:text-black;
+  border-radius: 2px;
+  text-wrap: wrap;
+  overflow: auto;
+}
+
+.dropdown {
+  @apply bg-gray-100 text-black;
+  @apply dark:bg-gray-800 dark:text-white;
+  border: 1px solid #888 !important;
+}
