@@ -1,11 +1,15 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod emitter;
 mod taurithread;
+mod udpserver;
+mod wsserver;
 
 use std::{collections::HashMap, sync::Mutex};
 use tauri::State;
 use taurithread::TauriThreadStorage;
+use wsserver::WSServer;
 
 // Here we use Mutex to achieve interior mutability
 struct Storage {
@@ -35,10 +39,6 @@ fn query(storage: State<Storage>) -> String {
   format!("{}", joined)
 }
 
-pub struct TauriThreadStorage2 {
-  pub handle: Mutex<Option<std::thread::JoinHandle<()>>>,
-}
-
 #[tauri::command]
 fn start_thread(threadname: String, storage: State<Mutex<TauriThreadStorage>>) -> String {
   let stopped = storage.lock().unwrap().stop_thread();
@@ -57,17 +57,38 @@ fn stop_thread(storage: State<Mutex<TauriThreadStorage>>) -> String {
   }
 }
 
+#[tauri::command]
+fn start_ws(wsserver: State<Mutex<WSServer>>) -> String {
+  wsserver.lock().unwrap().start_listen_loop();
+  format!("Started websocket server")
+}
+
+#[tauri::command]
+fn stop_ws(wsserver: State<Mutex<WSServer>>) -> String {
+  wsserver.lock().unwrap().stop_listen_loop();
+  format!("Stopped websocket server")
+}
 
 fn main() {
+  env_logger::init();
+
+  // Create the runtime
+  let mut runtime: tauri::async_runtime::RuntimeHandle = tauri::async_runtime::handle();
+  // wsserver::setup_websocket_listening(&mut runtime);
+  udpserver::setup_udp_listening(&mut runtime);
+
   tauri::Builder::default()
     .manage(Storage { store: Default::default() })
     .manage(Mutex::new(TauriThreadStorage::new()))
+    .manage(Mutex::new(WSServer::new()))
     .invoke_handler(tauri::generate_handler![
       greet,
       save,
       query,
       start_thread,
       stop_thread,
+      start_ws,
+      stop_ws,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
