@@ -1,7 +1,10 @@
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import "./TauriApiTester.css";
 import { invoke } from "@tauri-apps/api";
+import { Event as TauriEvent, listen } from '@tauri-apps/api/event'
+import { appWindow, WebviewWindow } from '@tauri-apps/api/window'
+import EventMessage, { EventMessageInterface } from "./EventMessage";
 
 function genRandomName(length: number): string {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -33,6 +36,12 @@ async function invokeApiWrapper(apiName: string): Promise<any> {
     case "stop_thread": {
       return await invoke("stop_thread", {}) as string;
     }
+    case "clear_window": {
+      return await invoke("clear_window", {}) as string;
+    }
+    case "set_window": {
+      return await invoke("set_window", {}) as string;
+    }
     default: {
       return "TODO: Api call not done: " + apiName;
     }
@@ -42,6 +51,23 @@ async function invokeApiWrapper(apiName: string): Promise<any> {
 function TauriApiTester(): JSX.Element {
   const apiSelect = useRef<HTMLSelectElement>(null);
   const preApiOutput = useRef<HTMLPreElement>(null);
+  const eventMessageRef = useRef<EventMessageInterface>(null);
+
+  const beEventHandler = (event: TauriEvent<string>) => {
+    if (eventMessageRef.current !== null) {
+      eventMessageRef.current.showEvent(event.payload);
+    }
+  };
+
+  useEffect(() => {
+    let unlisten: Function | null = null;
+    appWindow.listen<string>('my-window-event', beEventHandler).then((u : Function) => {
+      unlisten = u;
+    });
+    return () => {
+      if (unlisten) { unlisten(); }
+    };
+  });
 
   const onClickTest = async function (evt: React.MouseEvent<HTMLButtonElement>): Promise<void> {
     evt.preventDefault();
@@ -71,19 +97,24 @@ function TauriApiTester(): JSX.Element {
   };
 
   return (
-    <>
+    <div className="text-center">
       <select className="dropdown" ref={apiSelect}>
         <option value="greet">Greet</option>
         <option value="save">Save some key</option>
         <option value="query">Query saved keys</option>
         <option value="start_thread">Start thread</option>
         <option value="stop_thread">Stop thread</option>
+        <option value="clear_window">Clear window</option>
+        <option value="set_window">Set window</option>        
       </select>
       &nbsp;&nbsp;
       <button onClick={onClickTest}>Test the API</button>
       <br></br>
       <pre ref={preApiOutput} className="apioutput"></pre>
-    </>
+      <br/>
+      <EventMessage ref={eventMessageRef} />
+      <br></br>
+    </div>
   );
 }
 

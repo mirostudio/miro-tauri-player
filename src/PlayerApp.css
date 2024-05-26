@@ -9,8 +9,9 @@
 }
 
 .mainpanel {
-  @apply w-96 h-80 p-6;
-  @apply shadow-lg text-center;
+  @apply p-8 shadow-lg text-center;
   @apply bg-gray-300 dark:bg-gray-600;
   border-radius: 8px;
+  width: 36rem;
+  height: 40rem;
 }

@@ -4,12 +4,10 @@
 mod emitter;
 mod taurithread;
 mod udpserver;
-mod wsserver;
 
 use std::{collections::HashMap, sync::Mutex};
-use tauri::State;
+use tauri::{State, Window};
 use taurithread::TauriThreadStorage;
-use wsserver::WSServer;
 
 // Here we use Mutex to achieve interior mutability
 struct Storage {
@@ -58,15 +56,15 @@ fn stop_thread(storage: State<Mutex<TauriThreadStorage>>) -> String {
 }
 
 #[tauri::command]
-fn start_ws(wsserver: State<Mutex<WSServer>>) -> String {
-  wsserver.lock().unwrap().start_listen_loop();
-  format!("Started websocket server")
+fn clear_window() -> String {
+  emitter::clear_target_window();
+  format!("Cleared window")
 }
 
 #[tauri::command]
-fn stop_ws(wsserver: State<Mutex<WSServer>>) -> String {
-  wsserver.lock().unwrap().stop_listen_loop();
-  format!("Stopped websocket server")
+fn set_window(window: Window) -> String {
+  emitter::set_target_window(window);
+  format!("Set window")
 }
 
 fn main() {
@@ -74,21 +72,19 @@ fn main() {
 
   // Create the runtime
   let mut runtime: tauri::async_runtime::RuntimeHandle = tauri::async_runtime::handle();
-  // wsserver::setup_websocket_listening(&mut runtime);
   udpserver::setup_udp_listening(&mut runtime);
 
   tauri::Builder::default()
     .manage(Storage { store: Default::default() })
     .manage(Mutex::new(TauriThreadStorage::new()))
-    .manage(Mutex::new(WSServer::new()))
     .invoke_handler(tauri::generate_handler![
       greet,
       save,
       query,
       start_thread,
       stop_thread,
-      start_ws,
-      stop_ws,
+      clear_window,
+      set_window,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
