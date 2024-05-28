@@ -1,0 +1,50 @@
+{
+	// Utility code completion snippets for typescript react.
+
+	"console.log": {
+		"scope": "javascript, typescript, javascriptreact, typescriptreact",
+		"prefix": "cl",
+		"description": "Log to console",
+		"body": [
+			"console.log($0);"
+		],
+	},
+
+	"react-tsx-fn-component-nochild": {
+		"scope": "typescriptreact",
+		"prefix": "f",
+		"description": "Function style react component for TSX",
+		"body": [
+			"function ${TM_FILENAME_BASE} () : JSX.Element {",
+			"  return (",
+			"    <$1></$1>",
+			"  );",
+			"}",
+			"",
+			"export default ${TM_FILENAME_BASE};",
+			"",
+		],
+	},
+
+	"react-tsx-fn-component-child": {
+		"scope": "typescriptreact",
+		"prefix": "f-ch",
+		"description": "Function style react component for TSX, with children",
+		"body": [
+			"interface ${TM_FILENAME_BASE}Props {",
+			"  children: React.ReactNode,",
+			"}",
+			"",
+			"function ${TM_FILENAME_BASE} ({ children }: ${TM_FILENAME_BASE}Props) : JSX.Element {",
+			"  return (",
+			"    <$1>",
+			"      {children}",
+			"    </$1>",
+			"  );",
+			"}",
+			"",
+			"export default ${TM_FILENAME_BASE};",
+			"",
+		],
+	}
+}

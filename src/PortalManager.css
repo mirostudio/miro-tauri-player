@@ -14,7 +14,7 @@
 }
 
 .overlay {
-  @apply bg-black opacity-60;
+  @apply bg-black opacity-60 text-white;
   position: fixed;
   top: 0;
   left: 0;

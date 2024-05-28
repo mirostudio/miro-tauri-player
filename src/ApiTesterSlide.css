@@ -1,5 +1,5 @@
 .apioutput {
-  @apply m-2 p-2 h-32 w-full text-sm;
+  @apply m-2 p-2 h-32 w-64 text-sm;
   @apply bg-black dark:bg-white;
   @apply text-white dark:text-black;
   border-radius: 2px;

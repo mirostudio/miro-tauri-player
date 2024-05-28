@@ -1,13 +1,14 @@
+import InteractionContext, { Interaction } from "./InteractionContext";
 import "./PlayerApp.css";
-import PortalManager from "./PortalManager";
-import TauriApiTester from "./TauriApiTester";
+import { SlideManager } from "./SlideManager";
 
-function PlayerApp() {
+function PlayerApp() : JSX.Element {
   return (
-    <div className="mainpanel">
-      <TauriApiTester/>
-      <PortalManager />
-    </div>
+    <>
+      <InteractionContext.Provider value={Interaction.default()}>
+        <SlideManager />
+      </InteractionContext.Provider>
+    </>
   );
 }
 

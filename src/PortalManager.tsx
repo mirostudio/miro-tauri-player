@@ -3,23 +3,20 @@ import { createPortal } from "react-dom";
 import "./PortalManager.css";
 
 interface ModalParams {
-  open: boolean;
   onClose: Function;
   children: ReactNode;
 }
 
-function Modal({ open, onClose, children }: ModalParams): JSX.Element | null {
+function Modal({ onClose, children }: ModalParams): JSX.Element | null {
   const onClickClose = () => {
     onClose();
   };
 
-  if (!open) {
-    return null;
-  }
-
   return createPortal(
     <>
-      <div className="overlay"></div>
+      <div className="overlay">
+        progress bar here.
+      </div>
       <div className="modal">
         <div className="title">modal data:</div>
         <br />
@@ -38,12 +35,15 @@ function Modal({ open, onClose, children }: ModalParams): JSX.Element | null {
 
 function PortalManager(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
       Test some modal window:
       &nbsp;&nbsp;
       <button onClick={() => setIsOpen(!isOpen)}>Toggle Modal</button>
-      <Modal open={isOpen} onClose={() => setIsOpen(false)}>Hello</Modal>
+      {isOpen &&
+        <Modal onClose={() => setIsOpen(false)}>Hello</Modal>
+      }
     </>
   );
 }

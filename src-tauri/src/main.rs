@@ -6,6 +6,7 @@ mod taurithread;
 mod udpserver;
 
 use std::{collections::HashMap, sync::Mutex};
+use serde::{Deserialize, Serialize};
 use tauri::{State, Window};
 use taurithread::TauriThreadStorage;
 
@@ -14,9 +15,40 @@ struct Storage {
   store: Mutex<HashMap<String, i32>>,
 }
 
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct CityInfo {
+  pub name: String,
+  pub country: String,
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub enum PayloadPreference {
+  PreferSelf,
+  PreferYear(i32),
+  PreferCity(CityInfo),
+}
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+pub struct DemoPayload {
+  pub first_name: String,
+  pub address: String,
+  pub pref: PayloadPreference,
+}
+
 #[tauri::command]
-fn greet(name: &str) -> String {
-  format!("Hello, {}! You've been greeted from Rust!", name)
+fn greet(name: &str) -> DemoPayload {
+  let pref =  PayloadPreference::PreferCity(CityInfo{
+    name: "Tokyo".to_string(),
+    country: "Japan".to_string(),
+  });
+  let p = DemoPayload {
+    first_name: name.to_string(),
+    address: "San Francisco".to_string(),
+    pref,
+  };
+  p
+  //let serialized = serde_json::to_string(&p).unwrap();
+  // format!("You've been greeted from Rust!: {}", serialized)
 }
 
 #[tauri::command]
