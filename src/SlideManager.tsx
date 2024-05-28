@@ -5,6 +5,7 @@ import { LogViewerSlide } from "./LogViewerSlide";
 import InteractionContext from "./InteractionContext";
 import CenteredCard from "./widgets/CenteredCard";
 import "./styles.css";
+import ContactInfoSlide from "./ContactInfoSlide";
 
 enum SlideId {
   API_TESTER = 0,
@@ -49,6 +50,9 @@ function selectSlide(index: number) : JSX.Element {
     }
     case 1: {
       return (<LogViewerSlide />);
+    }
+    case 2: {
+      return (<ContactInfoSlide />);
     }
     default: {
       return (

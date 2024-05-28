@@ -4,6 +4,9 @@ interface LinearProgressBarInterface {
   setProgress(percent: number): void;
 }
 
+/**
+ * The varying portion of the progressbard widget.
+ */
 const VaryingPart = forwardRef<LinearProgressBarInterface>(
   function VaryingPart(_props, ref) : JSX.Element {
     const [progressPercent, setProgressPercent] = useState<number>(0);
@@ -11,7 +14,6 @@ const VaryingPart = forwardRef<LinearProgressBarInterface>(
     useImperativeHandle(ref, () => ({
       setProgress(percent: number): void {
         const validated = Number.parseFloat(Math.min(Math.max(percent, 0), 100).toFixed(2));
-        setProgressPercent(validated);
         if (validated !== progressPercent) {
           setProgressPercent(validated);
         }
