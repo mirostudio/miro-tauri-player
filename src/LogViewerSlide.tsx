@@ -1,17 +1,24 @@
 
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { appWindow } from "@tauri-apps/api/window";
 import { Event as TauriEvent } from '@tauri-apps/api/event'
 import CenteredCard from "./widgets/CenteredCard";
+
+const MAX_LOG_ENTRIES: number = 5;
 
 function LogViewerSlide() : JSX.Element {
   const paperRef = useRef<HTMLDivElement>(null);
 
   const beEventHandler = (event: TauriEvent<string>) => {
-    if (paperRef.current) {
-      const currentText = paperRef.current.innerHTML;
-      paperRef.current.innerHTML = currentText + JSON.stringify(event.payload) + "\n<br/>\n";
+    if (!paperRef.current) { return; }
+    const containerDiv = paperRef.current as HTMLDivElement;
+    const text = JSON.stringify(event.payload);
+    const elem = document.createElement("div");
+    elem.innerHTML = text;
+    containerDiv.appendChild(elem);
+    if (containerDiv.childElementCount > MAX_LOG_ENTRIES) {
+      containerDiv.removeChild(containerDiv.children.item(0) as Node);
     }
   };
 
